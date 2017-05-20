@@ -316,6 +316,7 @@ public class MenteeController extends BaseEmailController {
             mentorScores.put(mentor,
                     professionalScore * professionalInterestsCoefficient
                             + personalScore * personalInterestsCoefficient);
+            mentor.distance = Helper.distance(mentor.getLatitude().doubleValue(),mentor.getLongitude().doubleValue(),mentee.getLatitude().doubleValue(),mentor.getLongitude().doubleValue());
         }
 
         // comment below if do not want to show score in log

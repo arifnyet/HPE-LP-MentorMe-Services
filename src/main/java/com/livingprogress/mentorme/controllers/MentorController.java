@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -231,7 +232,7 @@ public class MentorController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public SearchResult<Mentor> search(@ModelAttribute MentorSearchCriteria criteria,
-            @ModelAttribute Paging paging) throws MentorMeException {
+                                       @ModelAttribute Paging paging) throws MentorMeException {
         return mentorService.search(criteria, paging);
     }
 
@@ -261,7 +262,7 @@ public class MentorController {
      */
     @RequestMapping(value = "{id}/matchingMentees", method = RequestMethod.GET)
     public List<Mentee> getMatchingMentees(@PathVariable long id,
-            @ModelAttribute MatchSearchCriteria matchSearchCriteria) throws MentorMeException {
+                                           @ModelAttribute MatchSearchCriteria matchSearchCriteria) throws MentorMeException {
         Mentor mentor = mentorService.get(id);
         List<Mentee> mentees = Helper.searchMatchEntities(mentor,
                 new MenteeSearchCriteria(), matchSearchCriteria, menteeService);
@@ -282,7 +283,10 @@ public class MentorController {
                     Helper::getParentCategoryFromWeightedPersonalInterest);
             menteeScores.put(mentee, professionalScore * professionalInterestsCoefficient
                     + personalScore * personalInterestsCoefficient);
+            mentee.distance = Helper.distance(mentor.getLatitude().doubleValue(),mentor.getLongitude().doubleValue(),mentee.getLatitude().doubleValue(),mentor.getLongitude().doubleValue());
         }
+
+
 
         // comment below if do not want to show score in log
         menteeScores.entrySet().forEach(k ->
@@ -294,7 +298,7 @@ public class MentorController {
         return menteeScores.entrySet().stream() // reverse means desc order
                 .filter(c -> c.getValue() > minimumGoalScore) // must match or weight > minimumGoalScore
                 .sorted(Comparator.comparing(Map.Entry<Mentee, Integer>::getValue)
-                                  .reversed())
+                        .reversed())
                 .map(Map.Entry::getKey).limit(limit).collect(Collectors.toList());
     }
 
@@ -323,7 +327,7 @@ public class MentorController {
      */
     @RequestMapping(value = "{id}/remoteMatchingMentees")
     public List<Mentee> remoteMatchingMentees(@PathVariable long id,
-            @ModelAttribute MatchSearchCriteria criteria) throws MentorMeException {
+                                              @ModelAttribute MatchSearchCriteria criteria) throws MentorMeException {
         List<Long> ids = hodClient.getMatchingMentees(mentorService.get(id), criteria);
         if (ids.isEmpty()) {
             return Collections.emptyList();
@@ -334,4 +338,3 @@ public class MentorController {
         }
     }
 }
-

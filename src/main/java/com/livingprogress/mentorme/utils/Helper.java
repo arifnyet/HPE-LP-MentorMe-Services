@@ -559,11 +559,8 @@ public class Helper {
             	+ Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
             	* Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
     	double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    	double distance = R * c
-	    
-    	distance = Math.pow(distance, 2) + Math.pow(height, 2);
-
-    	return roundValue(Math.sqrt(distance),2);
+    	double distance = R * c;
+    	return roundValue(distance,2);
     }
 
     /**

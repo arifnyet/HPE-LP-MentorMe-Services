@@ -538,32 +538,52 @@ public class Helper {
         }
         return resultPD;
     }
+    /**
+    * Helper function to calculate distance between 2 points using Haversine
+    * https://en.wikipedia.org/wiki/Haversine_formula
+    * https://en.wikipedia.org/wiki/Great-circle_distance
+    *
+    * @param 2 points of map coordinates(latitude and longitude)
+    *
+    **/
+    public  static double calculateDistance (double lat1, double lon1, double lat2, double lon2) {
+        final int R = 6371; // Radius of the earth
 
-    public  static double distance(double lat1, double lon1, double lat2, double lon2) {
-        double theta = lon1 - lon2;
-        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-        dist = Math.acos(dist);
-        dist = rad2deg(dist);
-        dist = dist * 60 * 1.1515 * 1.609344;
-        return round(dist,2);
+    	double latDistance = Math.toRadians(lat2 - lat1);
+    	double lonDistance = Math.toRadians(lon2 - lon1);
+    	double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+            	+ Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+            	* Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+    	double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    	double distance = R * c
+	    
+    	distance = Math.pow(distance, 2) + Math.pow(height, 2);
+
+    	return roundValue(Math.sqrt(distance),2);
     }
-    public static double round(double value, int places) {
+
+    public static double roundValue(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
-
-    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
-/*::  This function converts decimal degrees to radians             :*/
-/*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
+    /**
+    * Helper function to convert degrees to radians
+    *
+    * @param degree value in double
+    *
+    **/
     private static double deg2rad(double deg) {
         return (deg * Math.PI / 180.0);
     }
-    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
-/*::  This function converts radians to decimal degrees             :*/
-/*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
+    /**
+    * Helper function to convert radians to degrees
+    *
+    * @param radian value in double
+    *
+    **/
     private static double rad2deg(double rad) {
         return (rad * 180.0 / Math.PI);
     }

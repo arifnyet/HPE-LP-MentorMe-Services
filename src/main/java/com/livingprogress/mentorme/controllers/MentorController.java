@@ -232,7 +232,7 @@ public class MentorController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public SearchResult<Mentor> search(@ModelAttribute MentorSearchCriteria criteria,
-                                       @ModelAttribute Paging paging) throws MentorMeException {
+            @ModelAttribute Paging paging) throws MentorMeException {
         return mentorService.search(criteria, paging);
     }
 
@@ -262,7 +262,7 @@ public class MentorController {
      */
     @RequestMapping(value = "{id}/matchingMentees", method = RequestMethod.GET)
     public List<Mentee> getMatchingMentees(@PathVariable long id,
-                                           @ModelAttribute MatchSearchCriteria matchSearchCriteria) throws MentorMeException {
+            @ModelAttribute MatchSearchCriteria matchSearchCriteria) throws MentorMeException {
         Mentor mentor = mentorService.get(id);
         List<Mentee> mentees = Helper.searchMatchEntities(mentor,
                 new MenteeSearchCriteria(), matchSearchCriteria, menteeService);
@@ -327,7 +327,7 @@ public class MentorController {
      */
     @RequestMapping(value = "{id}/remoteMatchingMentees")
     public List<Mentee> remoteMatchingMentees(@PathVariable long id,
-                                              @ModelAttribute MatchSearchCriteria criteria) throws MentorMeException {
+            @ModelAttribute MatchSearchCriteria criteria) throws MentorMeException {
         List<Long> ids = hodClient.getMatchingMentees(mentorService.get(id), criteria);
         if (ids.isEmpty()) {
             return Collections.emptyList();

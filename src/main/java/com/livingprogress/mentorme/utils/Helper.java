@@ -543,12 +543,16 @@ public class Helper {
     * https://en.wikipedia.org/wiki/Haversine_formula
     * https://en.wikipedia.org/wiki/Great-circle_distance
     *
-    * @param 2 points of map coordinates(latitude and longitude)
+    * @param lat1, latitude of point 1
+    * @param lon1, longitude of point 1
+    * @param lat2, latitude of point 2
+    * @param lon2, longitude of point 2
+    * @return calculated distance between 2 points
     *
     **/
     public  static double calculateDistance (double lat1, double lon1, double lat2, double lon2) {
         final int R = 6371; // Radius of the earth
-
+	
     	double latDistance = Math.toRadians(lat2 - lat1);
     	double lonDistance = Math.toRadians(lon2 - lon1);
     	double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
@@ -562,6 +566,14 @@ public class Helper {
     	return roundValue(Math.sqrt(distance),2);
     }
 
+    /**
+    * Helper function to round double value
+    *
+    * @param value the double value
+    * @param places the number of decimal places
+    * @return rounded up value
+    *
+    **/
     public static double roundValue(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
@@ -569,25 +581,7 @@ public class Helper {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
-    /**
-    * Helper function to convert degrees to radians
-    *
-    * @param degree value in double
-    *
-    **/
-    private static double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-    /**
-    * Helper function to convert radians to degrees
-    *
-    * @param radian value in double
-    *
-    **/
-    private static double rad2deg(double rad) {
-        return (rad * 180.0 / Math.PI);
-    }
-
+	
     /**
      * Get id of entity.
      *

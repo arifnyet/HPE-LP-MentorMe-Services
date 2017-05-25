@@ -283,7 +283,7 @@ public class MentorController {
                     Helper::getParentCategoryFromWeightedPersonalInterest);
             menteeScores.put(mentee, professionalScore * professionalInterestsCoefficient
                     + personalScore * personalInterestsCoefficient);
-            mentee.distance = Helper.distance(mentor.getLatitude().doubleValue(),mentor.getLongitude().doubleValue(),mentee.getLatitude().doubleValue(),mentor.getLongitude().doubleValue());
+            mentee.distance = Helper.distance(mentor,mentee);
         }
 
 

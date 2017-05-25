@@ -538,8 +538,18 @@ public class Helper {
         }
         return resultPD;
     }
+    /**
+    * Helper function to calculate distance between 2 points using Haversine
+    * https://en.wikipedia.org/wiki/Haversine_formula
+    * https://en.wikipedia.org/wiki/Great-circle_distance
+    *
+    * @param mentor, mentor entity
+    * @param mentee, mentee entity
+    * @return calculated distance between 2 points
+    *
+    **/
+    public  static double calculateDistance (Mentor mentor,Mentee mentee) {
 
-    public  static double distance(Mentor mentor,Mentee mentee) {
         if(mentor.getLatitude() == null || mentor.getLongitude() == null || mentee.getLatitude() == null || mentee.getLongitude() == null) return 0d;
         //if(mentor.getLatitude() == 0 || mentor.getLongitude() == 0 || mentee.getLatitude() == 0 || mentee.getLongitude() == 0) return 0d;
         Double lat1 = mentor.getLatitude().doubleValue();
@@ -548,16 +558,25 @@ public class Helper {
         Double lon2 = mentee.getLongitude().doubleValue();
 
         final int R = 6371; // Radius of the earth
-
-        double latDistance = Math.toRadians(lat2 - lat1);
-        double lonDistance = Math.toRadians(lon2 - lon1);
-        double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-                + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-                * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = R * c;
-        return roundValue(distance,2);
+	
+    	double latDistance = Math.toRadians(lat2 - lat1);
+    	double lonDistance = Math.toRadians(lon2 - lon1);
+    	double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+            	+ Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+            	* Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+    	double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    	double distance = R * c;
+    	return roundValue(distance,2);
     }
+
+    /**
+    * Helper function to round double value
+    *
+    * @param value the double value
+    * @param places the number of decimal places
+    * @return rounded up value
+    *
+    **/
     public static double roundValue(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
@@ -565,7 +584,6 @@ public class Helper {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
-
     /**
      * Get id of entity.
      *

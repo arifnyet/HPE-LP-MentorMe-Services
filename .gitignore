@@ -21,3 +21,5 @@ upload
 .classpath
 *.iml
 *.rdb
+src/main/java/com/livingprogress/mentorme/security/WebSecurityConfig.java
+*.properties

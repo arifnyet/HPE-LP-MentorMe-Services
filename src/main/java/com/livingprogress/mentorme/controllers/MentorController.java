@@ -323,7 +323,7 @@ public class MentorController {
      */
 
     @RequestMapping(value = "{id}/matchingMentees/Interests", method = RequestMethod.GET)
-    public List<Mentee> getMatchingMentees(@PathVariable long id,
+    public List<Mentee> getMatchingMenteesByInterest(@PathVariable long id,
             @ModelAttribute MatchSearchCriteria matchSearchCriteria) throws MentorMeException {
         Mentor mentor = mentorService.get(id);
         List<Mentee> mentees = Helper.searchMatchEntities(mentor,

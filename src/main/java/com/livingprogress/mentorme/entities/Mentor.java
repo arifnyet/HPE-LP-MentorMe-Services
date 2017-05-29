@@ -4,8 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.math.BigDecimal;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.util.List;
 
 /**
@@ -48,11 +54,6 @@ public class Mentor extends InstitutionUser {
      */
     private String companyName;
 
-    /**
-     * The distance(optional)
-     */
-    @Transient
-    public Double distance = 0.0;
 
     /**
      * The linkedin url.

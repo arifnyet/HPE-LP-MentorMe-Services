@@ -296,7 +296,7 @@ public class MenteeController extends BaseEmailController {
     }
 
     /**
-     * This method is used to get the matching mentors by interest.
+     * This method is used to get the matching mentors.
      *
      * @param id the id of the entity to retrieve
      * @param matchSearchCriteria the match criteria
@@ -343,7 +343,7 @@ public class MenteeController extends BaseEmailController {
                                   .reversed())
                 .map(Map.Entry::getKey).limit(limit).collect(Collectors.toList());
     }
-
+  
     /**
      * This method is used to get the matching mentors by distance.
      *

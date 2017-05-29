@@ -296,7 +296,7 @@ public class MenteeController extends BaseEmailController {
     }
 
     /**
-     * This method is used to get the matching mentors.
+     * This method is used to get the matching mentors by Interests.
      *
      * @param id the id of the entity to retrieve
      * @param matchSearchCriteria the match criteria
@@ -305,7 +305,7 @@ public class MenteeController extends BaseEmailController {
      * @throws EntityNotFoundException if the entity does not exist
      * @throws MentorMeException if any other error occurred during operation
      */
-    @RequestMapping(value = "{id}/matchingMentors", method = RequestMethod.GET)
+    @RequestMapping(value = "{id}/matchingMentors/Interests", method = RequestMethod.GET)
     public List<Mentor> getMatchingMentors(@PathVariable long id,
             @ModelAttribute MatchSearchCriteria matchSearchCriteria) throws MentorMeException {
         Mentee mentee = menteeService.get(id);
@@ -342,6 +342,30 @@ public class MenteeController extends BaseEmailController {
                 .sorted(Comparator.comparing(Map.Entry<Mentor, Integer>::getValue)
                                   .reversed())
                 .map(Map.Entry::getKey).limit(limit).collect(Collectors.toList());
+    }
+
+    /**
+     * This method is used to get the matching mentors by distance.
+     *
+     * @param id the id of the entity to retrieve
+     * @param matchSearchCriteria the match criteria
+     * @return the matching mentors.
+     * @throws IllegalArgumentException if id is not positive
+     * @throws EntityNotFoundException if the entity does not exist
+     * @throws MentorMeException if any other error occurred during operation
+     */
+    @RequestMapping(value = "{id}/matchingMentors/Distance", method = RequestMethod.GET)
+    public List<Mentor> getMatchingMentorsByDistance(@PathVariable long id,
+                                                     @ModelAttribute MatchSearchCriteria matchSearchCriteria) throws MentorMeException {
+        Mentee mentee = menteeService.get(id);
+        List<Mentor> mentors = Helper.searchMatchEntities(mentee,
+                new MentorSearchCriteria(), matchSearchCriteria, mentorService);
+        Map<Mentor, Integer> mentorScores = new HashMap<>();
+        for (Mentor mentor : mentors) {
+            mentor.distance = Helper.calculateDistance(mentor,mentee);
+        }
+
+        return mentors;
     }
 
     /**

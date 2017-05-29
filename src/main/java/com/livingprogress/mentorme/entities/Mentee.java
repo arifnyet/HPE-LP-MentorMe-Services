@@ -46,6 +46,7 @@ public class Mentee extends InstitutionUser {
     /**
      * The distance.
      */
+    @Transient
     public Double distance;
 
     /**

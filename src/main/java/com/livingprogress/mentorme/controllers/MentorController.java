@@ -326,7 +326,6 @@ public class MentorController {
         Mentor mentor = mentorService.get(id);
         List<Mentee> mentees = Helper.searchMatchEntities(mentor,
                 new MenteeSearchCriteria(), matchSearchCriteria, menteeService);
-        Map<Mentee, Integer> menteeScores = new HashMap<>();
         for (Mentee mentee : mentees) {
             mentee.distance = Helper.calculateDistance(mentor,mentee);
         }

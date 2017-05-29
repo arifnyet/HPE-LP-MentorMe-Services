@@ -360,7 +360,6 @@ public class MenteeController extends BaseEmailController {
         Mentee mentee = menteeService.get(id);
         List<Mentor> mentors = Helper.searchMatchEntities(mentee,
                 new MentorSearchCriteria(), matchSearchCriteria, mentorService);
-        Map<Mentor, Integer> mentorScores = new HashMap<>();
         for (Mentor mentor : mentors) {
             mentor.distance = Helper.calculateDistance(mentor,mentee);
         }

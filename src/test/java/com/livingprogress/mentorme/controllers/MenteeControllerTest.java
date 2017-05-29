@@ -451,44 +451,44 @@ public class MenteeControllerTest extends BaseTest {
      * @throws Exception throws if any error happens.
      */
     @Test
-    public void getMatchingMentors() throws Exception {
+    public void getMatchingMentorsByInterest() throws Exception {
         // assigned
-        mockMvc.perform(MockMvcRequestBuilders.get("/mentees/4/matchingMentors"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/mentees/4/matchingMentors/Interest"))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$", Matchers.hasSize(2)))
                .andExpect(content().json(readFile("mentee4MatchingMentors.json")));
         // not assigned
-        mockMvc.perform(MockMvcRequestBuilders.get("/mentees/10/matchingMentors"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/mentees/10/matchingMentors/Interest"))
                .andExpect(status().isOk())
                .andExpect(content().json(readFile("mentee10MatchingMentors.json")));
-        mockMvc.perform(MockMvcRequestBuilders.get("/mentees/999/matchingMentors"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/mentees/999/matchingMentors/Interest"))
                .andExpect(status().isNotFound());
 
         // test match criteria
-        mockMvc.perform(MockMvcRequestBuilders.get("/mentees/4/matchingMentors?distance=10")
+        mockMvc.perform(MockMvcRequestBuilders.get("/mentees/4/matchingMentors/Interest?distance=10")
                                               .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$", Matchers.hasSize(2)));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/mentees/4/matchingMentors?distance=2")
+        mockMvc.perform(MockMvcRequestBuilders.get("/mentees/4/matchingMentors/Interest?distance=2")
                                               .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$", Matchers.hasSize(1)));
-        mockMvc.perform(MockMvcRequestBuilders.get("/mentees/4/matchingMentors?maxCount=1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/mentees/4/matchingMentors/Interest?maxCount=1")
                                               .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$", Matchers.hasSize(1)));
-        mockMvc.perform(MockMvcRequestBuilders.get("/mentees/4/matchingMentors?personalInterests[0].id=1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/mentees/4/matchingMentors/Interest?personalInterests[0].id=1")
                                               .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$", Matchers.hasSize(1)));
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/mentees/4/matchingMentors?professionalInterests[0].id=1")
+                .get("/mentees/4/matchingMentors/Interest?professionalInterests[0].id=1")
                 .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$", Matchers.hasSize(1)));
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/mentees/4/matchingMentors?distance=30&maxCount=100"
+                .get("/mentees/4/matchingMentors/Interest?distance=30&maxCount=100"
                         + "&personalInterests[0].id=2"
                         + "&professionalInterests[0].id=1")
                 .accept(MediaType.APPLICATION_JSON))

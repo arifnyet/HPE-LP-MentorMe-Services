@@ -56,6 +56,12 @@ public class Mentor extends InstitutionUser {
 
 
     /**
+     * The distance.
+     */
+    public Double distance;
+
+
+    /**
      * The linkedin url.
      */
     private String linkedInUrl;

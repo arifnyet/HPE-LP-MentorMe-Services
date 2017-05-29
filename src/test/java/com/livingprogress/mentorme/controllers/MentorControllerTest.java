@@ -487,42 +487,42 @@ public class MentorControllerTest extends BaseTest {
      * @throws Exception throws if any error happens.
      */
     @Test
-    public void getMatchingMentees() throws Exception {
+    public void getMatchingMenteesByInterest() throws Exception {
         // assigned
-        mockMvc.perform(MockMvcRequestBuilders.get("/mentors/3/matchingMentees"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/mentors/3/matchingMentees/Interest"))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$", Matchers.hasSize(1)))
                .andExpect(content().json(readFile("mentor3MatchingMentees.json")));
         // not assigned
-        mockMvc.perform(MockMvcRequestBuilders.get("/mentors/5/matchingMentees"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/mentors/5/matchingMentees/Interest"))
                .andExpect(status().isOk())
                .andExpect(content().json(readFile("mentor5MatchingMentees.json")));
-        mockMvc.perform(MockMvcRequestBuilders.get("/mentors/999/matchingMentees"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/mentors/999/matchingMentees/Interest"))
                .andExpect(status().isNotFound());
         // test match criteria
-        mockMvc.perform(MockMvcRequestBuilders.get("/mentors/3/matchingMentees?distance=10")
+        mockMvc.perform(MockMvcRequestBuilders.get("/mentors/3/matchingMentees/Interest?distance=10")
                                               .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$", Matchers.hasSize(1)));
-        mockMvc.perform(MockMvcRequestBuilders.get("/mentors/3/matchingMentees?distance=6")
+        mockMvc.perform(MockMvcRequestBuilders.get("/mentors/3/matchingMentees/Interest?distance=6")
                                               .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$", Matchers.hasSize(1)));
-        mockMvc.perform(MockMvcRequestBuilders.get("/mentors/3/matchingMentees?maxCount=1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/mentors/3/matchingMentees/Interest?maxCount=1")
                                               .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$", Matchers.hasSize(1)));
-        mockMvc.perform(MockMvcRequestBuilders.get("/mentors/3/matchingMentees?personalInterests[0].id=1")
+        mockMvc.perform(MockMvcRequestBuilders.get("/mentors/3/matchingMentees/Interest?personalInterests[0].id=1")
                                                     .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$", Matchers.hasSize(1)));
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/mentors/3/matchingMentees?professionalInterests[0].id=4")
+                .get("/mentors/3/matchingMentees/Interest?professionalInterests[0].id=4")
                                               .accept(MediaType.APPLICATION_JSON))
                .andExpect(status().isOk())
                .andExpect(jsonPath("$", Matchers.hasSize(1)));
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/mentors/3/matchingMentees?distance=30&maxCount=100"
+                .get("/mentors/3/matchingMentees/Interest?distance=30&maxCount=100"
                 + "&personalInterests[0].id=2"
                 + "&professionalInterests[0].id=4")
                                               .accept(MediaType.APPLICATION_JSON))

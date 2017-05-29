@@ -271,8 +271,9 @@ public class MentorController {
      * @throws EntityNotFoundException if the entity does not exist
      * @throws MentorMeException if any other error occurred during operation
      */
-    @RequestMapping(value = "{id}/matchingMentees", method = RequestMethod.GET)
-    public List<Mentee> getMatchingMentees(@PathVariable long id,
+
+    @RequestMapping(value = "{id}/matchingMentees/Interests", method = RequestMethod.GET)
+    public List<Mentee> getMatchingMenteesByInterest(@PathVariable long id,
             @ModelAttribute MatchSearchCriteria matchSearchCriteria) throws MentorMeException {
         Mentor mentor = mentorService.get(id);
         List<Mentee> mentees = Helper.searchMatchEntities(mentor,
@@ -308,6 +309,29 @@ public class MentorController {
                 .sorted(Comparator.comparing(Map.Entry<Mentee, Integer>::getValue)
                                   .reversed())
                 .map(Map.Entry::getKey).limit(limit).collect(Collectors.toList());
+    }
+  
+    /**
+     * This method is used to get the matching mentees by distance.
+     *
+     * @param id the id of the entity to retrieve
+     * @param matchSearchCriteria the match criteria
+     * @return the matching mentees.
+     * @throws IllegalArgumentException if id is not positive
+     * @throws EntityNotFoundException if the entity does not exist
+     * @throws MentorMeException if any other error occurred during operation
+     */
+    @RequestMapping(value = "{id}/matchingMentees/Distance", method = RequestMethod.GET)
+    public List<Mentee> getMatchingMenteesByDistance(@PathVariable long id,
+                                           @ModelAttribute MatchSearchCriteria matchSearchCriteria) throws MentorMeException {
+        Mentor mentor = mentorService.get(id);
+        List<Mentee> mentees = Helper.searchMatchEntities(mentor,
+                new MenteeSearchCriteria(), matchSearchCriteria, menteeService);
+        Map<Mentee, Integer> menteeScores = new HashMap<>();
+        for (Mentee mentee : mentees) {
+            mentee.distance = Helper.calculateDistance(mentor,mentee);
+        }
+        return mentees;
     }
 
     /**

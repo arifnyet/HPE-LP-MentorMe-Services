@@ -44,6 +44,11 @@ public class Mentee extends InstitutionUser {
     private String facebookUrl;
 
     /**
+     * The distance.
+     */
+    public Double distance;
+
+    /**
      * The skills.
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)

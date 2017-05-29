@@ -40,7 +40,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URLConnection;
 import java.util.*;
 import java.util.Locale;
@@ -60,7 +59,7 @@ public class Helper {
     /**
      * Represents the mysql function to calculate distance between two points.
      */
-    public static final String CALCULATE_DISTANCE = "calculate_distance";
+    private static final String CALCULATE_DISTANCE = "calculate_distance";
 
     /**
      * Represents the classes that there is no need to log.
@@ -539,51 +538,7 @@ public class Helper {
         }
         return resultPD;
     }
-    /**
-    * Helper function to calculate distance between 2 points using Haversine
-    * https://en.wikipedia.org/wiki/Haversine_formula
-    * https://en.wikipedia.org/wiki/Great-circle_distance
-    *
-    * @param mentor, mentor entity
-    * @param mentee, mentee entity
-    * @return calculated distance between 2 points
-    *
-    **/
-    public  static double calculateDistance (Mentor mentor,Mentee mentee) {
 
-        if(mentor.getLatitude() == null || mentor.getLongitude() == null || mentee.getLatitude() == null || mentee.getLongitude() == null) return 0d;
-        Double lat1 = mentor.getLatitude().doubleValue();
-        Double lon1 = mentor.getLongitude().doubleValue();
-        Double lat2 = mentee.getLatitude().doubleValue();
-        Double lon2 = mentee.getLongitude().doubleValue();
-
-        final int R = 6371; // Radius of the earth
-	
-    	double latDistance = Math.toRadians(lat2 - lat1);
-    	double lonDistance = Math.toRadians(lon2 - lon1);
-    	double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-            	+ Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
-            	* Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-    	double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    	double distance = R * c;
-    	return roundValue(distance,2);
-    }
-
-    /**
-    * Helper function to round double value
-    *
-    * @param value the double value
-    * @param places the number of decimal places
-    * @return rounded up value
-    *
-    **/
-    public static double roundValue(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
-        BigDecimal bd = new BigDecimal(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
     /**
      * Get id of entity.
      *

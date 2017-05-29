@@ -294,7 +294,7 @@ public class MenteeController extends BaseEmailController {
      * @throws MentorMeException if any other error occurred during operation
      */
     @RequestMapping(value = "{id}/matchingMentors/Interests", method = RequestMethod.GET)
-    public List<Mentor> getMatchingMentorsByInterests(@PathVariable long id,
+    public List<Mentor> getMatchingMentors(@PathVariable long id,
             @ModelAttribute MatchSearchCriteria matchSearchCriteria) throws MentorMeException {
         Mentee mentee = menteeService.get(id);
         List<Mentor> mentors = Helper.searchMatchEntities(mentee,

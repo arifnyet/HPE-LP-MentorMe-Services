@@ -505,6 +505,7 @@ public class Helper {
     public static Predicate
     buildPredicate(InstitutionUserSearchCriteria criteria, Predicate pd, Root<?> root, CriteriaBuilder cb) {
         Predicate resultPD = Helper.buildEqualPredicate(criteria.getInstitutionId(), pd, root.get("institution").get("id"), cb);
+        resultPD = Helper.buildEqualPredicate(criteria.getLocaleId(), resultPD, root.get("locale").get("id"), cb); // match with locale id too
         resultPD = Helper.buildEqualPredicate(criteria.getStatus(), resultPD, root.get("status"), cb);
         resultPD = Helper.buildGreaterThanOrEqualToPredicate(criteria.getMinAveragePerformanceScore(),
                 resultPD, root.get("averagePerformanceScore"), cb);
@@ -551,7 +552,6 @@ public class Helper {
     public  static double calculateDistance (Mentor mentor,Mentee mentee) {
 
         if(mentor.getLatitude() == null || mentor.getLongitude() == null || mentee.getLatitude() == null || mentee.getLongitude() == null) return 0d;
-        //if(mentor.getLatitude() == 0 || mentor.getLongitude() == 0 || mentee.getLatitude() == 0 || mentee.getLongitude() == 0) return 0d;
         Double lat1 = mentor.getLatitude().doubleValue();
         Double lon1 = mentor.getLongitude().doubleValue();
         Double lat2 = mentee.getLatitude().doubleValue();
@@ -1298,6 +1298,10 @@ public class Helper {
             GenericService<R, T> service) throws MentorMeException {
     	if (entity.getInstitution() != null) {
     		criteria.setInstitutionId(entity.getInstitution().getId());
+    	}
+    	//match with language too
+    	if (entity.getLocale() != null) {
+    		criteria.setLocaleId(entity.getLocale().getId());
     	}
     	
         Paging paging = null;

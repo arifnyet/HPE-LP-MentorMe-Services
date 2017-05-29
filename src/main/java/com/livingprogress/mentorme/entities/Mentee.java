@@ -43,6 +43,13 @@ public class Mentee extends InstitutionUser {
      */
     private String facebookUrl;
 
+
+    /**
+     * The distance(optional)
+     */
+    @Transient
+    public Double distance = 0.0;
+
     /**
      * The skills.
      */

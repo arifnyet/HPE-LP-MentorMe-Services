@@ -294,6 +294,55 @@ public class MenteeController extends BaseEmailController {
     public int getAverageScore(@PathVariable long id) throws MentorMeException {
         return menteeService.getAverageMenteeScore(id);
     }
+    
+    /**
+     * This method is used to get the matching mentors.
+     *
+     * @param id the id of the entity to retrieve
+     * @param matchSearchCriteria the match criteria
+     * @return the matching mentors.
+     * @throws IllegalArgumentException if id is not positive
+     * @throws EntityNotFoundException if the entity does not exist
+     * @throws MentorMeException if any other error occurred during operation
+     */
+    @RequestMapping(value = "{id}/matchingMentors", method = RequestMethod.GET)
+    public List<Mentor> getMatchingMentors(@PathVariable long id,
+            @ModelAttribute MatchSearchCriteria matchSearchCriteria) throws MentorMeException {
+        Mentee mentee = menteeService.get(id);
+        List<Mentor> mentors = Helper.searchMatchEntities(mentee,
+                new MentorSearchCriteria(), matchSearchCriteria, mentorService);
+        Map<Mentor, Integer> mentorScores = new HashMap<>();
+        for (Mentor mentor : mentors) {
+            int professionalScore = Helper.getScore(directMatchingPoints, parentCategoryMatchingPoints,
+                    new ArrayList<>(mentee.getProfessionalInterests()),
+                    new ArrayList<>(mentor.getProfessionalInterests()),
+                    WeightedProfessionalInterest::getWeight,
+                    WeightedProfessionalInterest::getProfessionalInterest,
+                    Helper::getParentCategoryFromWeightedProfessionalInterest);
+            int personalScore = Helper.getScore(directMatchingPoints, parentCategoryMatchingPoints,
+                    new ArrayList<>(mentee.getPersonalInterests()),
+                    new ArrayList<>(mentor.getPersonalInterests()),
+                    WeightedPersonalInterest::getWeight,
+                    WeightedPersonalInterest::getPersonalInterest,
+                    Helper::getParentCategoryFromWeightedPersonalInterest);
+            mentorScores.put(mentor,
+                    professionalScore * professionalInterestsCoefficient
+                            + personalScore * personalInterestsCoefficient);
+        }
+
+        // comment below if do not want to show score in log
+        mentorScores.entrySet().forEach(k ->
+                Helper.logDebugMessage(LogAspect.LOGGER, k.getKey().getId() + "," + k.getValue()));
+        // could custom max count to return
+        int limit = matchSearchCriteria.getMaxCount() != null
+                ? matchSearchCriteria.getMaxCount() : topMatchingAmount;
+        // sort the mentorScores by scores and return the top <topMatchingAmount> mentors
+        return mentorScores.entrySet().stream()  // reverse means desc order
+                .filter(c -> c.getValue() > minimumGoalScore) // must match or weight > minimumGoalScore
+                .sorted(Comparator.comparing(Map.Entry<Mentor, Integer>::getValue)
+                                  .reversed())
+                .map(Map.Entry::getKey).limit(limit).collect(Collectors.toList());
+    }
 
     /**
      * This method is used to get the matching mentors.
@@ -306,7 +355,7 @@ public class MenteeController extends BaseEmailController {
      * @throws MentorMeException if any other error occurred during operation
      */
     @RequestMapping(value = "{id}/matchingMentors/Interests", method = RequestMethod.GET)
-    public List<Mentor> getMatchingMentors(@PathVariable long id,
+    public List<Mentor> getMatchingMentorsByInterest(@PathVariable long id,
             @ModelAttribute MatchSearchCriteria matchSearchCriteria) throws MentorMeException {
         Mentee mentee = menteeService.get(id);
         List<Mentor> mentors = Helper.searchMatchEntities(mentee,
